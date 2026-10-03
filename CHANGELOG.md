@@ -2,6 +2,14 @@
 
 All notable changes to Box Office are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Claude Code plugin** (`plugin/`, marketplace at the repository root): `claude plugin marketplace add AntonioGM382/box-office`, then `claude plugin install box-office@box-office`. It brings the office hooks without editing `settings.json` (the same http hooks as `hooks-snippet.json`, port 3001), an `/office` command (`status`, `open`, `start`), a status band above the prompt (chats that need you, context, cost, plan usage) and an opt-in Coordinator check of each tool call (`coordinator` option, off by default; fails open unless `coordinatorFailClosed`). Needs Claude Code 2.1.287 or newer.
+- `POST /api/mod/check` and `GET /api/mod/summary` (`lib/modapi.js`), token-gated, for the plugin. The check answers `none`, `ask` or `deny`, never `allow`.
+- The setup screen and Settings, Hooks detect the installed plugin and stop offering the `settings.json` install while it is active (and flag hooks installed both ways).
+
 ## [0.1.0] - first public release
 
 First version published as open source. This entry describes what you get.

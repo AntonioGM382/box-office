@@ -21,3 +21,6 @@ Thumbs.db
 public/js/local/
 # Stray PowerShell cache when a child process runs with a blank LOCALAPPDATA
 Microsoft/
+# Claude Code config backups, written here if a test run points CLAUDE_CONFIG_DIR at the repo
+backups/
+.claude.json*

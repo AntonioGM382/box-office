@@ -56,13 +56,22 @@ A chat has one writer at a time. If a terminal still has it open, the office ask
 
 ### Optional: watch and guard your terminal chats
 
-The global hooks are optional. Without them, terminal chats are watched from their transcripts: you see what they do, but Coordinator rules only cover the chats the office runs. To guard the chats in your own terminals too, add the hooks (or press the button in the first-run screen or Settings):
+The global hooks are optional. Without them, terminal chats are watched from their transcripts: you see what they do, but Coordinator rules only cover the chats the office runs. To guard the chats in your own terminals too, add the hooks in one of two ways.
+
+**Recommended: the Box Office plugin for Claude Code** (no edit to your `settings.json`; it also adds `/office` and a status line above the prompt, see [Claude Code plugin](#claude-code-plugin)):
+
+```bash
+claude plugin marketplace add AntonioGM382/box-office
+claude plugin install box-office@box-office
+```
+
+**Fallback: write them into your user settings** (or press the button in the first-run screen or Settings):
 
 ```bash
 npm run install-hooks     # adds the Claude Code hooks to your user settings (backs them up first; -- --dry-run shows the change)
 ```
 
-Then start a new Claude Code session (or run `/hooks` in a running one). Details: [Hooks: what gets installed](#hooks-what-gets-installed).
+Use one or the other, not both (with both, every event arrives twice). Then start a new Claude Code session (or run `/hooks` in a running one). Details: [Hooks: what gets installed](#hooks-what-gets-installed).
 
 ### Requirements
 
@@ -192,6 +201,10 @@ See [Privacy](#privacy-and-what-leaves-your-machine) and [Security model](#secur
 
 On first start a short screen checks that the `claude` CLI runs and is logged in, shows your projects folder, offers the optional hooks and herdr, and sets theme, low-power mode and notifications. Skip it and reopen it any time from Settings (the header `...` menu). Settings has tabs for General, Appearance, Notifications, AI helpers, Economy, Coordinator, Hooks, Security and About. Nothing writes to `~/.claude` except on an explicit click.
 
+### Plugins & mods
+
+Settings, **Plugins & mods** lists what Claude Code has installed: each plugin's version, marketplace, scope (user or project), enabled or disabled, and what it contains (commands, skills, agents, hooks, MCP servers, mods), plus any managed-settings restrictions on mods. A **mod** runs inside Claude Code with your permissions and is not sandboxed, so for each one the page shows a plain-language risk summary ("can run processes", "can make network requests", "can approve or deny tool calls"…), taken from the hooks and calls it declares (through `claude plugin validate --json` when the CLI is there, else a scan of its source). A **mods** chip appears on a room or drawer header when the chat has active mods; it is inferred from the install records and the settings files of the chat's folder. The view is **read-only**: it never installs, enables or disables anything, it only shows the command to run (`/plugin disable <name>`, `claude plugin uninstall …`) with a copy button. It reads the plugin folders and manifests only, never their contents beyond names and declared hooks.
+
 ### Cosmetics and Wallet mode
 
 ![The shop and wallet](docs/screenshots/shop.png)
@@ -209,6 +222,36 @@ Terminal chats are normally view-only: there is no way to type into someone else
 | Send a message to a terminal chat | No (view-only) | Yes, typed into the real terminal |
 | Stop a terminal chat (Escape) | No | Yes |
 | Slash commands from the drawer | Imported headless chats: only a few | Typed into the terminal, so they run there |
+
+### Claude Code plugin
+
+The `plugin/` folder is a Claude Code plugin with a **mod** (code that runs inside Claude Code; needs Claude Code 2.1.287 or newer, tested with 2.1.287). This repository is also its marketplace (`.claude-plugin/marketplace.json`), so:
+
+```bash
+claude plugin marketplace add AntonioGM382/box-office
+claude plugin install box-office@box-office      # later: claude plugin update box-office@box-office
+claude --plugin-dir ./plugin                      # or: try it for one session from your clone, nothing installed
+```
+
+| Part | What it does |
+|------|--------------|
+| Hooks | The same nine http hooks as [`hooks-snippet.json`](hooks-snippet.json), posting to `http://127.0.0.1:3001/hook` with a 2 s timeout. Your terminal chats show up exactly as with `install-hooks`, and the Coordinator guards them the same way. If the office is down, a hook is a non-blocking error and Claude Code carries on. Your `settings.json` is not touched. |
+| `/office` | `/office status` (is it running, where it lives, how many chats need you), `/office open` (signs your default browser in with a fresh one-time link), `/office start` (starts the office if it is not running; it keeps running after the Claude Code session ends). |
+| Status band | One line above the prompt: chats that need you, context used, the session's cost, your 5-hour plan usage, and `/office open`. It reads the office every 8 s and backs off to once a minute while it does not answer. Terminal and the Desktop app only. |
+| Coordinator | **Off by default.** With the `coordinator` option on, every tool call Claude Code would allow is also put to the office's Coordinator rules (`POST /api/mod/check`, 1.5 s limit). A deny rule refuses it; an ask rule asks you in Claude Code's own question dialog (**Allow once** / **Deny**). |
+
+Options (`/plugin`, **Installed**, **box-office**, configure; or `/config`): `port` (default 3001), `boxOfficePath` (your checkout, for `/office start`; else it looks next to the plugin and in the marketplace copy), `dataDir` (where the office keeps `.office-token`; else the office's own default), `coordinator` (default off), `coordinatorFailClosed` (default off), `statusBand` (default on). Run `/reload-plugins` after changing one.
+
+Things to know:
+
+- **Port 3001 only, for the hooks.** Claude Code cannot put a plugin option into an http hook's URL, so the plugin's hooks always post to 3001. If your office uses another port, use `npm run install-hooks -- --port <n>` instead of the plugin's hooks (`/office status` says so). The `port` option still steers `/office`, the band and the coordinator.
+- **`OFFICE_HOOK_TOKEN_REQUIRED=1`**: the plugin's hooks send no token, so they are refused. Use `install-hooks -- --token-file` instead.
+- **The coordinator never approves anything.** Claude Code decides first (your permission rules, the mode, the PreToolUse hooks, the office's own hook among them). If that is ask or deny, it stands untouched and the office is not asked. Only when it is allow does the mod ask the office, and then it either keeps Claude Code's own allow or turns it into deny (or into your answer to an ask rule). An ask rule in a `claude -p` run, where nobody can answer, is a deny.
+- **When the office is down** the coordinator fails open: the call goes ahead and the band says `Box Office unreachable: Coordinator rules not applied`. With `coordinatorFailClosed` on, it refuses the call instead, until you start the office (`/office start`) or switch the option off. With the office up and the hooks reaching it, the coordinator's answer is the one the office already gave through its hook; its own job is the gaps (the 2 s hook timeout, an office on another port, an office that was down).
+- **Why the hooks are http hooks and not the mod.** Wherever Claude Code's built-in guard runs (Team and Enterprise sign-ins, machines with managed settings), settings-hook events skip every mod a user installs, so a mod cannot forward them. Http hooks in the plugin's `hooks.json` run everywhere.
+- **Turn it off:** `/plugin disable box-office@box-office`, or start Claude Code with `--safe-mode` (all installed mods and plugins off for that session). Remove it: `claude plugin uninstall box-office@box-office`.
+
+What it can reach is listed in [SECURITY.md](SECURITY.md#the-box-office-plugin). `claude plugin validate plugin` prints the same list. Tests: `claude plugin test plugin` (the mod, no session or network) and `node tools/run-tests.js modapi` (the office side).
 
 ### Hooks: what gets installed
 
@@ -345,7 +388,7 @@ Roadmap ideas, none promised: a locale setting, adapters for other agent CLIs, a
 
 ## Uninstall
 
-1. Remove the hooks: `npm run uninstall-hooks` (use `-- --any-port` if you used a different port). Restart running Claude Code sessions to drop them. Your settings backups are the `settings.json.bak-*` files next to `settings.json`; delete them if you like. If you switched on the Claude Code advisor from the AI helpers tab, switch it off there first, or remove `advisorModel` from `settings.json`.
+1. Remove the plugin if you installed it: `claude plugin uninstall box-office@box-office` (and `claude plugin marketplace remove box-office`). Remove the hooks: `npm run uninstall-hooks` (use `-- --any-port` if you used a different port). Restart running Claude Code sessions to drop them. Your settings backups are the `settings.json.bak-*` files next to `settings.json`; delete them if you like. If you switched on the Claude Code advisor from the AI helpers tab, switch it off there first, or remove `advisorModel` from `settings.json`.
 2. Stop the server (Ctrl+C).
 3. Delete the project folder. That removes `data/` too (chats, rules, wallet, uploads, API token).
 4. Delete the economy key folder: `%APPDATA%\claude-office` on Windows, `~/.config/claude-office` (or `$XDG_CONFIG_HOME/claude-office`) elsewhere.

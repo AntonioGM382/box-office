@@ -1,0 +1,19 @@
+{
+  "name": "box-office",
+  "displayName": "Box Office",
+  "version": "0.1.0",
+  "description": "Connects Claude Code to Box Office, the local dashboard of your chats: sends it the hook events it watches, adds /office (status, open, start), a status band above the prompt, and an opt-in check of each tool call against the office's Coordinator rules. Talks to 127.0.0.1 only.",
+  "author": { "name": "AntonioGM382", "url": "https://github.com/AntonioGM382" },
+  "homepage": "https://github.com/AntonioGM382/box-office#claude-code-plugin",
+  "repository": "https://github.com/AntonioGM382/box-office",
+  "license": "MIT",
+  "keywords": ["dashboard", "hooks", "mod", "coordinator"],
+  "userConfig": {
+    "port": { "type": "number", "title": "Box Office port", "description": "The port Box Office listens on (127.0.0.1). The plugin's hooks always post to 3001; for another port install the hooks with npm run install-hooks -- --port N.", "default": 3001, "min": 1, "max": 65535 },
+    "boxOfficePath": { "type": "directory", "title": "Box Office folder", "description": "Your Box Office checkout (the folder with bin/box-office.js), for /office start. Leave empty to look next to this plugin and in the marketplace copy." },
+    "dataDir": { "type": "directory", "title": "Box Office data folder", "description": "Where the office keeps its data and its .office-token file. Leave empty for the office's own default." },
+    "coordinator": { "type": "boolean", "title": "Coordinator in Claude Code", "description": "Ask Box Office's Coordinator rules about each tool call Claude Code would allow, with a native question for 'ask' rules. Off by default.", "default": false },
+    "coordinatorFailClosed": { "type": "boolean", "title": "Refuse tool calls when Box Office is down", "description": "With the coordinator on: refuse a tool call the office cannot check (it is unreachable). Off: let it through and show a warning.", "default": false },
+    "statusBand": { "type": "boolean", "title": "Status band", "description": "Show one line above the prompt: chats that need you, context, cost and plan usage.", "default": true }
+  }
+}

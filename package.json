@@ -57,6 +57,10 @@
     "CHANGELOG.md",
     "SECURITY.md",
     "docs/economy.md",
+    "plugin",
+    "!plugin/tests",
+    "!plugin/.claude-plugin/types",
+    "!plugin/tsconfig.json",
     "!public/js/local"
   ]
 }

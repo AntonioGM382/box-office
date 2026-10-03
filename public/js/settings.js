@@ -5,7 +5,7 @@
 // only from a button, with {userClick:true}. Every server string goes through esc(). Theme, density and low-power are
 // owned by core.js / render.js; this file drives their own controls, so there is one source of truth for each.
 const STG = { st: null, err: '', busy: '', msg: '', msgErr: false, tab: 'general', wallet: null, walletErr: '', back: null, from: '' };
-const STG_TABS = [['general', 'General'], ['appearance', 'Appearance'], ['notifications', 'Notifications'], ['helpers', 'AI helpers'], ['economy', 'Economy'], ['coordinator', 'Coordinator'], ['hooks', 'Hooks'], ['security', 'Security'], ['about', 'About']];
+const STG_TABS = [['general', 'General'], ['appearance', 'Appearance'], ['notifications', 'Notifications'], ['helpers', 'AI helpers'], ['economy', 'Economy'], ['coordinator', 'Coordinator'], ['hooks', 'Hooks'], ['plugins', 'Plugins & mods'], ['security', 'Security'], ['about', 'About']];
 const STG_REPO = 'https://github.com/AntonioGM382/box-office';
 
 async function stgLoad(fresh) {
@@ -42,10 +42,14 @@ function stgDiff(lines) {
 function stgHooks(st, key) {
   const H = st.hooks, ip = H.installPlan, up = H.uninstallPlan, busy = !!STG.busy, mine = H.installed + H.legacy;
   const on = H.installed === H.total && H.total > 0 && !H.legacy;
-  const state = H.error ? stgBadge('warn', 'settings.json unreadable') : on ? stgBadge('ok', `Installed (${H.installed} of ${H.total})`) : mine ? stgBadge('warn', `Partly installed (${H.installed} of ${H.total})`) : stgBadge('off', 'Not installed');
+  // the Box Office Claude Code plugin brings the same hooks (to 127.0.0.1:3001) without touching settings.json; it only covers this office on that port
+  const PL = st.plugin || {}, viaPlugin = !!PL.active && Number(H.port) === Number(PL.hookPort || 3001), offerInstall = !viaPlugin || mine > 0;
+  const state = H.error ? stgBadge('warn', 'settings.json unreadable') : viaPlugin ? stgBadge('ok', 'Hooked through the Box Office plugin') : on ? stgBadge('ok', `Installed (${H.installed} of ${H.total})`) : mine ? stgBadge('warn', `Partly installed (${H.installed} of ${H.total})`) : stgBadge('off', 'Not installed');
   const evs = (ip.events || []).filter(e => e.what !== 'ok').map(e => e.ev);
   return `<div class="stx-hooks">
-    <p class="stx-lead"><b>Opt-in.</b> The office already shows the chats it starts itself. These hooks add the chats you run in your <b>own terminals</b>, and let the Coordinator guard them. Nothing is written to your Claude Code settings unless you click <b>Install</b> below.</p>
+    <p class="stx-lead"><b>Opt-in.</b> The office already shows the chats it starts itself. Hooks add the chats you run in your <b>own terminals</b>, and let the Coordinator guard them. Two ways to get them: the <b>Box Office plugin</b> for Claude Code (recommended: <span class="mono">claude plugin marketplace add AntonioGM382/box-office</span>, then <span class="mono">claude plugin install box-office@box-office</span>), or the <b>Install</b> button below, which writes them into your <span class="mono">settings.json</span>. Nothing is written there unless you click it.</p>
+    ${viaPlugin ? `<div class="gst" role="status">The plugin <span class="mono">${esc(PL.id || 'box-office@box-office')}</span>${PL.version ? ' ' + esc(PL.version) : ''} is installed and on, so your terminal chats are hooked without any change to <span class="mono">settings.json</span>.${mine ? ' The office hooks are <b>also</b> in settings.json, so every event arrives twice: remove them with <b>Uninstall hooks</b>.' : ''} To switch the plugin off: <span class="mono">/plugin disable box-office@box-office</span>.</div>` : ''}
+    ${PL.active && !viaPlugin ? `<div class="gst warn" role="status">The Box Office plugin is installed, but its hooks post to port ${esc(PL.hookPort || 3001)} and this office listens on ${esc(H.port)}. Install the hooks below for this port.</div>` : ''}
     <div class="stx-row"><span>${state}</span><span class="muted">Port ${esc(H.port)}</span><span class="muted mono stx-path">${esc(H.settingsPath)}${H.settingsExists ? '' : ' (does not exist yet)'}</span></div>
     ${H.error ? `<div class="gst err" role="alert">${esc(H.error)}</div>` : ''}
     ${H.legacy ? `<div class="gst warn" role="status">${esc(H.legacy)} hook ${H.legacy === 1 ? 'entry still uses' : 'entries still use'} the old <span class="mono">http://localhost:${esc(H.port)}/hook</span> address. <b>Install</b> upgrades ${H.legacy === 1 ? 'it' : 'them'} in place to <span class="mono">http://127.0.0.1:${esc(H.port)}/hook</span> (a local address no other program can squat on).</div>` : ''}
@@ -55,7 +59,7 @@ function stgHooks(st, key) {
       ${ip.error ? '' : stgDiff(ip.diff)}
     </details>
     <div class="stx-acts">
-      <button type="button" class="btn primary" data-act="hooks-install" data-k="hi-${esc(key)}"${busy || H.error || H.tokenRequired || !ip.changes ? ' disabled' : ''}>${STG.busy === 'install' ? 'Installing…' : on ? 'Installed' : mine ? 'Update hooks' : 'Install hooks'}</button>
+      ${offerInstall ? `<button type="button" class="btn primary" data-act="hooks-install" data-k="hi-${esc(key)}"${busy || H.error || H.tokenRequired || !ip.changes ? ' disabled' : ''}>${STG.busy === 'install' ? 'Installing…' : on ? 'Installed' : mine ? 'Update hooks' : 'Install hooks'}</button>` : ''}
       <button type="button" class="btn bad" data-act="hooks-uninstall" data-k="hu-${esc(key)}"${busy || H.error || !up.changes ? ' disabled' : ''}>${STG.busy === 'uninstall' ? 'Removing…' : 'Uninstall hooks'}</button>
     </div>
     ${stgMsg()}
@@ -85,7 +89,7 @@ function stpHtml(st) {
     <ol class="stx-steps">
       ${step(1, 'Claude Code detected?', claude, s1)}
       ${step(2, 'Your chats', '', s2)}
-      ${step(3, 'Also watch and guard chats in your own terminals', H.installed === H.total && H.total ? stgBadge('ok', 'Installed') : stgBadge('off', 'Off'), `<details class="stx-det stx-fold" data-det="stp3"${STG.open3 ? ' open' : ''}><summary>Show this option</summary>${stgHooks(st, 'stp3')}</details>`, true)}
+      ${step(3, 'Also watch and guard chats in your own terminals', st.plugin && st.plugin.active && Number(H.port) === Number(st.plugin.hookPort || 3001) ? stgBadge('ok', 'Plugin') : H.installed === H.total && H.total ? stgBadge('ok', 'Installed') : stgBadge('off', 'Off'), `<details class="stx-det stx-fold" data-det="stp3"${STG.open3 ? ' open' : ''}><summary>Show this option</summary>${stgHooks(st, 'stp3')}</details>`, true)}
       ${step(4, 'herdr', Hd.detected ? stgBadge('ok', 'Detected' + (Hd.panes ? ` · ${Hd.panes} chat${Hd.panes === 1 ? '' : 's'}` : '')) : stgBadge('off', 'Not detected'), s4, true)}
       ${step(5, 'Look and feel', '', s5)}
     </ol></div>
@@ -152,6 +156,7 @@ function stgPane(st) {
     ${stgRow('Rules', '<button type="button" class="btn" data-act="open-rules" data-k="rules">Open rules and log…</button>', 'Add, edit and test rules, and see what it did.')}`;
   }
   if (t === 'hooks') return `<h3>Hooks</h3>${stgHooks(st, 'set')}`;
+  if (t === 'plugins') return plgPane(); // public/js/plugins.js
   if (t === 'security') return `<h3>Security</h3>
     ${stgRow('"Never ask" workers (bypassPermissions)', S.allowBypass ? stgBadge('warn', 'Allowed') : stgBadge('ok', 'Not allowed'), S.allowBypass ? 'The Hire form can offer a worker that never asks before editing files or running commands. Turn it off by removing <span class="mono">OFFICE_ALLOW_BYPASS=1</span> from <span class="mono">.env</span> and restarting.' : 'Every hired worker has to ask (or be limited to plan / edit-only). To allow a "Never ask" worker, set <span class="mono">OFFICE_ALLOW_BYPASS=1</span> in <span class="mono">.env</span> and restart. Read-only here on purpose: a web page should not be able to widen it.')}
     ${S.envDisable ? stgRow('OFFICE_DISABLE_BYPASS', stgBadge('ok', 'Set'), 'This old switch is set and always wins over <span class="mono">OFFICE_ALLOW_BYPASS</span>.') : ''}
@@ -180,6 +185,7 @@ async function stgOpen(tab) {
   if (!await stgLoad(false)) { toast(STG.err); return; }
   STG.tab = STG_TABS.some(t => t[0] === tab) ? tab : STG.tab; STG.msg = '';
   if (STG.tab === 'economy') await stgLoadWallet();
+  if (STG.tab === 'plugins') await plgLoad(true);
   const more = document.getElementById('hdrMore'), menu = document.getElementById('hdrMenu'); if (more && menu && !menu.hidden) more.click(); // fold the "…" menu away
   stgRender(); stgOv('settingsOv').classList.add('show'); stgNavVisible(stgOv('settingsBox'));
 }
@@ -190,6 +196,7 @@ function stgClose() {
 async function stgGo(tab) {
   STG.tab = tab; STG.msg = '';
   if (tab === 'economy') await stgLoadWallet();
+  if (tab === 'plugins') await plgLoad(true);
   if (tab !== 'hooks' || !STG.st) stgRender(); else { await stgLoad(false); stgRender(); }
 }
 
@@ -231,6 +238,7 @@ async function stgAct(act, ev) {
   if (act === 'hooks-install') return stgHooksRun('install');
   if (act === 'hooks-uninstall') return stgHooksRun('uninstall');
   if (act === 'goto-recent') return stgToRecent();
+  if (act.startsWith('plg-')) return plgAct(act, ev);
   if (act === 'open-notify') return stgAfterClose(() => { if (typeof ntToggle === 'function') ntToggle(true); else { const b = document.getElementById('ntBtn'); if (b) b.click(); } });
   if (act === 'open-rules') return stgAfterClose(() => { const b = document.getElementById('coordOpen'); if (b) b.click(); });
   if (act === 'open-setup') { stgClose(); return stpOpen(); }

@@ -414,7 +414,7 @@ function syncDrawer() {
     if ($('#wMeta').dataset.sig !== msig) {
       $('#wMeta').dataset.sig = msig;
       $('#wMeta').innerHTML = qm;
-      $('#wBadges').innerHTML = `<span class="badge" data-full="${esc('Permissions: ' + (PERMS[w.permissionMode] || w.permissionMode || ''))}">${esc(w.permissionMode || '')}</span>` + (w.permissionMode === 'bypassPermissions' ? '<span class="badge bypass" data-full="Runs with permissions bypassed: it never asks before editing files or running commands">bypass</span>' : '') + (w.viaHerdr ? '<span class="badge link" title="Messages you send here go to the live terminal chat">Linked to terminal</span>' : '');
+      $('#wBadges').innerHTML = `<span class="badge" data-full="${esc('Permissions: ' + (PERMS[w.permissionMode] || w.permissionMode || ''))}">${esc(w.permissionMode || '')}</span>` + (w.permissionMode === 'bypassPermissions' ? '<span class="badge bypass" data-full="Runs with permissions bypassed: it never asks before editing files or running commands">bypass</span>' : '') + (w.viaHerdr ? '<span class="badge link" title="Messages you send here go to the live terminal chat">Linked to terminal</span>' : '') + plgChipHtml('w:' + w.id);
     }
     setText($('#wPath'), w.cwd || '');
     setHidden($('#wInt'), w.status !== 'working');
@@ -490,7 +490,7 @@ function renderObs() {
   const hsig = JSON.stringify([si, o && [o.project, o.title, o.model, o.canSend, o.demo, o.cwd, o.status]]);
   if (hsig !== obsSig.head) {
     obsSig.head = hsig;
-    $('#oBadges').innerHTML = o ? (o.title && o.project ? `<span class="badge">${esc(o.project)}</span>` : '') + (o.canSend ? '<span class="badge link">Linked to terminal</span>' : '') + (o.demo ? '<span class="badge demo">Demo</span>' : '') + (si.detail ? `<span class="mono" style="font-size:11.5px;color:var(--dim)">${esc(si.detail)}</span>` : '') : '';
+    $('#oBadges').innerHTML = o ? (o.title && o.project ? `<span class="badge">${esc(o.project)}</span>` : '') + (o.canSend ? '<span class="badge link">Linked to terminal</span>' : '') + (o.demo ? '<span class="badge demo">Demo</span>' : '') + plgChipHtml('o:' + o.id) + (si.detail ? `<span class="mono" style="font-size:11.5px;color:var(--dim)">${esc(si.detail)}</span>` : '') : '';
     setText($('#oPath'), o ? o.cwd || '' : '');
     setText($('#oNote'), !o ? 'This session has ended.' : o.canSend ? '' : 'Watching only. Reply to this chat in its own terminal.');
     const can = !!(o && o.canSend); setHidden($('#oCompWrap'), !can);

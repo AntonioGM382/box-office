@@ -1,0 +1,15 @@
+{
+  "description": "Box Office: the mod (register.mjs) and the http hooks that send Claude Code's events to the office on 127.0.0.1:3001, the same entries as hooks-snippet.json. A hook that cannot reach the office is a non-blocking error, so Claude Code carries on.",
+  "modules": ["./register.mjs"],
+  "hooks": {
+    "SessionStart":     [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "UserPromptSubmit": [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "PreToolUse":       [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "PostToolUse":      [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "SubagentStart":    [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "SubagentStop":     [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "Notification":     [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "Stop":             [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }],
+    "SessionEnd":       [{ "hooks": [{ "type": "http", "url": "http://127.0.0.1:3001/hook", "timeout": 2 }] }]
+  }
+}

@@ -26,7 +26,7 @@ function makeCard(kind, o) {
   el.className = 'room'; el.tabIndex = 0; el.dataset.key = kind + o.id; el.dataset.kind = kind; el.dataset.id = o.id;
   el.innerHTML = `<div class="scene"><div class="stage"><canvas></canvas><div class="tags"></div></div><span class="unreadDot" title="Unread"></span></div>
     <div class="annex" hidden></div><div class="wfs"></div>
-    <div class="info"><div class="row1"><span class="nm"></span><span class="badge link" hidden></span><span class="badge md-b"></span><span class="badge bypass" hidden data-full="Runs with permissions bypassed: it never asks before editing files or running commands">bypass</span><span class="badge demo" hidden>Demo</span><span class="badge" data-w hidden></span></div>
+    <div class="info"><div class="row1"><span class="nm"></span><span class="badge link" hidden></span><span class="badge md-b"></span><span class="badge bypass" hidden data-full="Runs with permissions bypassed: it never asks before editing files or running commands">bypass</span><span class="badge demo" hidden>Demo</span><span class="badge" data-w hidden></span>${plgChipHtml(kind + ':' + o.id)}</div>
     <div class="sub"><span class="sp"></span><span class="sc"></span></div>
     <div class="status"><span class="spill"><i></i><span class="sl"></span></span><span class="sdt"></span></div><div class="usg"></div><div class="rbud" hidden></div><button type="button" class="cmpb" data-act="cmp" aria-label="Context window filling up: open the chat to compact it" hidden></button><div class="wfl"></div><div class="last"></div><div class="coordmsg"></div><div class="pend"></div>
     <div class="acts"></div></div>`;
@@ -115,6 +115,7 @@ function updateCard(e, o, pends) {
   const linked = hired ? !!o.viaHerdr : !!o.canSend;
   setHidden(r.link, !linked); setText(r.link, hired ? 'terminal' : 'linked');
   r.link.dataset.full = hired ? 'Linked to a live terminal: messages go to that terminal chat' : 'Linked to its terminal: you can message it from here';
+  if (typeof plgTick === 'function') plgTick();
   setHidden(r.demo, !((!hired) && o.demo)); setHidden(r.bypass, !(hired && o.permissionMode === 'bypassPermissions'));
   if (r.hire && r.hire.disabled !== !!o.demo) r.hire.disabled = !!o.demo;
   if (r.hire) r.hire.dataset.full = o.demo ? 'Demo session, cannot be imported' : 'Import: the office continues this chat as one of your Claudes (close it in the terminal first, or fork a copy)';

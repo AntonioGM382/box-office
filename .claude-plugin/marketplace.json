@@ -1,0 +1,12 @@
+{
+  "name": "box-office",
+  "owner": { "name": "AntonioGM382", "url": "https://github.com/AntonioGM382" },
+  "metadata": { "description": "Box Office, a local dashboard for your Claude Code chats, and its Claude Code plugin." },
+  "plugins": [
+    {
+      "name": "box-office",
+      "source": "./plugin",
+      "description": "Sends Claude Code's events to Box Office (no settings.json edit), adds /office, a status band and an opt-in Coordinator check. 127.0.0.1 only."
+    }
+  ]
+}

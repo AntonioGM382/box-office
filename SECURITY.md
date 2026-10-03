@@ -34,6 +34,19 @@ What the office protects, and what it does not.
 | Economy anti-tamper | A hash-chained ledger and a signed checkpoint. | **A game feature, not a security boundary.** It exists to keep the numbers honest for the user, not to resist someone who edits the code. |
 | Data at rest | Chats, settings, ledger and uploads are stored as plain files in `data/`. | No encryption. On Windows the economy's signing key is protected with DPAPI; on macOS and Linux it is a plain file (mode 0600) under `~/.config/claude-office`. |
 
+## The Box Office plugin
+
+`plugin/` is an optional Claude Code plugin (install: `claude plugin install box-office@box-office`, see the README). It contains a **mod**: code that runs inside Claude Code with your permissions and is not sandboxed. What it does and can reach:
+
+- **Hooks.** Nine http hooks to `http://127.0.0.1:3001/hook` (the same as `hooks-snippet.json`). They carry what any office hook carries (prompts, tool names and inputs, transcript paths) to your local office and nowhere else.
+- **Network.** `$.http.fetch` to `http://127.0.0.1:<port>` only (`/api/mod/summary`, `/api/mod/check`, `/api/launch-link`). Every call is cut off after 1.5 to 2.5 s. No other host, no telemetry.
+- **Files.** It reads one file: `<data dir>/.office-token`, the office token (in memory only; never written to `$.store`, which the plugin does not use at all). It checks whether `bin/box-office.js` and `.git` exist in the candidate Box Office folders.
+- **Processes.** `$.process.run` of `node plugin/scripts/office-helper.cjs` for three things: print the default data folder, start the office detached (`/office start`, only `bin/box-office.js` from a folder you set or that sits next to the plugin or in its marketplace copy), and open a `http://127.0.0.1:<port>/?k=…` sign-in link in your browser (it refuses any other URL).
+- **Tool decisions.** Only with the `coordinator` option on (off by default) does it hook `tool.check`. It can turn Claude Code's allow into deny, or ask you first; it never returns an allow of its own (it hands back Claude Code's own decision object), never changes an ask or a deny, and so never skips a permission prompt Claude Code would show. `/api/mod/check` answers `none`, `ask` or `deny`, never `allow`. With `coordinatorFailClosed` it refuses tool calls while the office cannot be reached.
+- **The office side** (`lib/modapi.js`): `/api/mod/*` sits behind the same token, Host, Origin and Sec-Fetch checks as the rest of the API. The setup screen reads `~/.claude/plugins/installed_plugins.json` and `settings.json` to see whether the plugin is installed; it writes nothing.
+
+`claude plugin validate plugin` lists exactly what the mod hooks and calls. To turn it off: `/plugin disable box-office@box-office`, or `claude --safe-mode` for one session (no installed mods or plugins at all); to remove it, `claude plugin uninstall box-office@box-office`. `OFFICE_HOOK_TOKEN_REQUIRED=1` refuses the plugin's hooks (they send no token); use `install-hooks --token-file` instead.
+
 ## In scope
 
 - Anything that lets a web page or another host reach the API, read the token, or send a request without it.

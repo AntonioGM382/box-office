@@ -81,7 +81,9 @@ function start() {
   console.log(`data dir: ${dataDir || path.join(ROOT, 'data')}`);
   try {
     const d = require('../tools/install-hooks').detect({ port });
-    if (d.error) console.log(`hooks: cannot check (${d.error})`);
+    let viaPlugin = false; try { viaPlugin = Number(port) === 3001 && require('../lib/modapi').detectPlugin().active; } catch {}
+    if (viaPlugin) console.log('hooks: through the Box Office plugin');
+    else if (d.error) console.log(`hooks: cannot check (${d.error})`);
     else if (d.installed < d.total) console.log(`hooks: ${d.installed}/${d.total} installed in ${d.settingsPath}${d.legacy ? ` (${d.legacy} still use the old http://localhost URL)` : ''}. Run: npm run install-hooks`);
     else console.log('hooks: installed');
   } catch {}
