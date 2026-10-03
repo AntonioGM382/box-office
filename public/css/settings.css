@@ -1,0 +1,54 @@
+/* First-run setup + Settings (public/js/settings.js). Tokens only (base.css), so both themes work. */
+.modal.stp { max-width:760px; display:flex; flex-direction:column; overflow:hidden; } .modal.stg { max-width:900px; min-height:min(560px,calc(100vh - 32px)); display:flex; flex-direction:column; }
+.stx-body { padding:6px 20px 12px; overflow:auto; flex:1; min-height:0; }
+.modal.stp .mh, .modal.stp .mf { flex:none; }
+.stx-intro { margin:10px 0 14px; color:var(--dim); line-height:1.5; }
+.stx-steps { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.stx-step { border:1px solid var(--line-2); border-radius:12px; background:var(--panel-2); padding:12px 14px; }
+.stx-sh { display:flex; align-items:center; gap:10px; flex-wrap:wrap; } .stx-sh h3 { margin:0; font-size:var(--fs-lg); font-weight:650; }
+.stx-n { flex:none; width:22px; height:22px; border-radius:50%; background:var(--accent-bg); color:var(--accent); border:1px solid rgba(var(--accent-rgb),.5); display:inline-flex; align-items:center; justify-content:center; font-size:var(--fs-sm); font-weight:700; }
+.stx-opt { font-size:var(--fs-xs); color:var(--faint); border:1px solid var(--line-2); border-radius:99px; padding:0 7px; }
+.stx-sb { margin:8px 0 0 32px; color:var(--dim); line-height:1.5; font-size:var(--fs-md); } .stx-sb p { margin:0 0 8px; }
+.stx-lead { margin:0 0 10px; line-height:1.55; color:var(--dim); } .stx-lead b, .stx-sb b { color:var(--text); }
+.stx-checks { list-style:none; margin:0 0 10px; padding:0; display:flex; flex-direction:column; gap:7px; } .stx-checks li { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; overflow-wrap:anywhere; }
+.stx-b { display:inline-flex; align-items:center; gap:6px; font-size:var(--fs-sm); font-weight:600; padding:1px 9px 1px 7px; border-radius:99px; border:1px solid var(--line-2); color:var(--dim); white-space:nowrap; }
+.stx-b i { width:8px; height:8px; border-radius:50%; background:var(--off); flex:none; }
+.stx-b.ok { color:var(--ok-ink); border-color:rgba(var(--work-rgb),.5); } .stx-b.ok i { background:var(--work); }
+.stx-b.warn { color:var(--warn-ink); border-color:rgba(var(--need-rgb),.55); } .stx-b.warn i { background:var(--need); }
+.stx-acts { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 2px; }
+.stx-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; margin:0 0 10px; } .stx-row .muted { overflow-wrap:anywhere; min-width:0; } .stx-path { flex-basis:100%; }
+.stx-det { border:1px solid var(--line); border-radius:9px; background:var(--well); padding:0 12px; margin:0 0 6px; } .stx-det > summary { cursor:pointer; padding:8px 0; color:var(--text); font-weight:600; font-size:var(--fs-md); } .stx-det[open] > summary { margin-bottom:4px; }
+.stx-det p { margin:0 0 8px; } .stx-det[open] { padding-bottom:10px; }
+.stx-fold { background:transparent; border:0; padding:0; } .stx-fold > summary { padding:2px 0 8px; color:var(--accent); font-weight:500; }
+.stx-fold .stx-det { background:var(--well); }
+.stx-diff { margin:4px 0 0; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; font-family:var(--mono); font-size:var(--fs-sm); line-height:1.45; max-height:240px; overflow:auto; white-space:pre; color:var(--dim); }
+.stx-diff .add { color:var(--add-ink); } .stx-diff .del { color:var(--del-ink); } .stx-diff .hunk { color:var(--info-ink); }
+.gst.warn { color:var(--warn-ink); margin:6px 0; }
+.stx-hooks .gst { margin:6px 0; overflow-wrap:anywhere; }
+.stx-set { display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+.stx-r { display:grid; grid-template-columns:200px minmax(0,1fr); gap:6px 18px; align-items:start; padding:12px 0; border-top:1px solid var(--line); } .stx-r:first-of-type { border-top:0; }
+.stx-r > span, .stx-r > label { color:var(--text); font-weight:600; font-size:var(--fs-md); padding-top:4px; }
+.stx-r input[type=text] { width:100%; background:var(--well); border:1px solid var(--field-edge); border-radius:8px; padding:7px 10px; color:var(--dim); }
+.stx-r input[type=text]:read-only { cursor:default; }
+.stx-h { margin-top:6px; line-height:1.5; font-size:var(--fs-sm); overflow-wrap:anywhere; }
+.stx-r a { color:var(--accent); }
+.stx-set .stx-r { padding:0; border-top:0; align-items:center; } .stx-set .stx-r > :not(span), .stx-r .hlp-seg { justify-self:start; }
+.stx-wrap { display:grid; grid-template-columns:190px minmax(0,1fr); flex:1; min-height:0; }
+.stx-nav { display:flex; flex-direction:column; gap:2px; padding:12px 10px; border-right:1px solid var(--line); background:var(--bg-2); overflow:auto; }
+.stx-nav button { text-align:left; background:transparent; border:0; border-radius:8px; padding:7px 11px; color:var(--dim); font-size:var(--fs-md); min-height:32px; }
+.stx-nav button:hover { background:var(--panel-2); color:var(--text); }
+.stx-nav button[aria-current="page"] { background:var(--accent-bg); color:var(--text); font-weight:600; box-shadow:inset 3px 0 0 var(--accent); }
+.stx-pane { padding:6px 22px 22px; overflow:auto; min-width:0; max-height:calc(100vh - 120px); } .stx-pane h3 { margin:14px 0 6px; font-size:var(--fs-lg); font-weight:650; }
+.stx-pane .hlp { margin-top:10px; }
+.stx-nav button:focus-visible, .stx-det > summary:focus-visible, .stx-diff:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+@media (max-width:759px) {
+  .stx-wrap { grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
+  .stx-nav { flex-direction:row; border-right:0; border-bottom:1px solid var(--line); padding:8px 10px; gap:4px; }
+  .stx-nav button { white-space:nowrap; flex:none; } .stx-nav button[aria-current="page"] { box-shadow:inset 0 -3px 0 var(--accent); }
+  .stx-pane { padding:4px 14px 20px; max-height:none; }
+  .stx-r { grid-template-columns:minmax(0,1fr); gap:4px; padding:10px 0; } .stx-r > span, .stx-r > label { padding-top:0; }
+  .stx-sb { margin-left:0; } .stx-body { padding:4px 14px 8px; }
+  .modal.stp, .modal.stg { max-height:calc(100vh - 16px); } .modal.stg { min-height:0; }
+  .ov:has(> .modal.stp), .ov:has(> .modal.stg) { padding:8px; }
+}
+@media (forced-colors:active) { .stx-b i { forced-color-adjust:none; background:CanvasText; } .stx-nav button[aria-current="page"] { outline:2px solid Highlight; } }

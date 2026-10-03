@@ -1,0 +1,62 @@
+{
+  "name": "box-office",
+  "version": "0.1.0",
+  "description": "A pixel-art isometric office that shows your Claude Code sessions, subagents and spend live. Zero dependencies.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "dashboard",
+    "hooks",
+    "pixel-art"
+  ],
+  "license": "MIT",
+  "private": false,
+  "author": "AntonioGM382",
+  "repository": "github:AntonioGM382/box-office",
+  "homepage": "https://github.com/AntonioGM382/box-office#readme",
+  "bugs": {
+    "url": "https://github.com/AntonioGM382/box-office/issues"
+  },
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/box-office.js",
+    "demo": "node bin/box-office.js demo",
+    "test": "node tools/run-tests.js",
+    "check": "node tools/check-globals.js && node tools/check-css.js",
+    "install-hooks": "node tools/install-hooks.js",
+    "uninstall-hooks": "node tools/install-hooks.js --uninstall",
+    "open": "node bin/box-office.js open",
+    "server": "node server.js"
+  },
+  "bin": {
+    "box-office": "bin/box-office.js"
+  },
+  "files": [
+    "bin",
+    "server.js",
+    "lib",
+    "economy.js",
+    "economy",
+    "usage.js",
+    "judge.js",
+    "budget.js",
+    "quick.js",
+    "demo.js",
+    "demo",
+    "examples/coordinator-rules.json",
+    "claude-cli.js",
+    "public",
+    "tools/install-hooks.js",
+    "hooks-snippet.json",
+    ".env.example",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "docs/economy.md",
+    "!public/js/local"
+  ]
+}

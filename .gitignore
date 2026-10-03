@@ -1,0 +1,23 @@
+# Runtime state: wallet ledger, chats, worker settings, API token, hook debug log. Never commit.
+data/
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Tooling
+node_modules/
+*.log
+coverage/
+tmp/
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local-only skins (e.g. the Claude Code mascot): never published
+public/js/local/
+# Stray PowerShell cache when a child process runs with a blank LOCALAPPDATA
+Microsoft/

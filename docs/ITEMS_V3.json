@@ -1,0 +1,60 @@
+{
+  "_note": "Catalogue of the room items added in v3 (42 floor, 18 wall, 24 desk-top). economy.js registers these ids (price, layer, size, flags) and public/js/items.js draws them. Prices use the ladder 10/25/60/100/250 Beans. size = [w,h] tiles for floor items, [w,1] wall cells for wall items; desk-top items use the small footprint unless noted. Flags: anim = has an idle animation, desk = worker desk (surface top), flat = rug layer others can stand on, host = has a top surface (shelf/table).",
+  "floor": [
+    ["room.plant_fern", "Fern", 25, [1,1]], ["room.cactus_tall", "Tall cactus", 25, [1,1]], ["room.bonsai_big", "Big bonsai", 60, [1,1]],
+    ["room.fridge_mini", "Mini fridge", 60, [1,1], "host"], ["room.water_cooler", "Water cooler", 25, [1,1], "anim"], ["room.vending", "Vending machine", 100, [1,1], "anim"],
+    ["room.printer", "Printer", 60, [1,1], "anim"], ["room.filing_cabinet", "Filing cabinet", 25, [1,1], "host"], ["room.locker", "Locker", 25, [1,1]],
+    ["room.guitar_stand", "Guitar on a stand", 60, [1,1]], ["room.drum_kit", "Drum kit", 250, [2,2]], ["room.piano", "Upright piano", 250, [2,1]],
+    ["room.treadmill", "Treadmill desk", 100, [2,1], "anim"], ["room.punching_bag", "Punching bag", 60, [1,1], "anim"], ["room.yoga_mat", "Yoga mat", 25, [2,1], "flat"],
+    ["room.pool_table", "Pool table", 250, [3,2]], ["room.foosball", "Foosball table", 100, [2,1]], ["room.ping_pong", "Ping-pong table", 250, [3,2]],
+    ["room.hammock", "Hammock", 100, [2,1], "anim"], ["room.telescope", "Telescope", 100, [1,1]], ["room.globe", "Floor globe", 25, [1,1]], ["room.easel", "Painting easel", 60, [1,1]],
+    ["room.pet_cat", "Cat", 100, [1,1], "anim"], ["room.pet_dog", "Dog", 100, [1,1], "anim"], ["room.robot_vacuum", "Robot vacuum", 60, [1,1], "anim"],
+    ["room.fireplace", "Fireplace", 250, [2,1], "anim"], ["room.xmas_tree", "Christmas tree", 60, [1,1], "anim"],
+    ["room.rug_persian", "Persian rug", 100, [3,2], "flat"], ["room.rug_hex", "Hex rug", 25, [2,2], "flat"], ["room.couch_l", "L-shaped couch", 100, [3,2]],
+    ["room.printer_3d", "3D printer", 100, [1,1], "anim"], ["room.whiteboard_stand", "Standing whiteboard", 60, [1,1]], ["room.desk_gaming", "Gaming desk", 100, [3,2], "desk"],
+    ["room.map_table", "Map table", 100, [2,2], "host"], ["room.bench_lab", "Lab bench", 100, [2,1], "host"], ["room.zen_sand", "Zen sand garden", 60, [2,2], "flat"],
+    ["room.koi_pond", "Koi pond", 250, [2,2], "anim flat"], ["room.speaker_tower", "Speaker tower", 60, [1,1], "anim"], ["room.record_player", "Record player cabinet", 60, [1,1], "anim host"],
+    ["room.arcade_racer", "Racing arcade", 250, [1,2], "anim"], ["room.bookshelf_tall", "Tall bookshelf", 60, [1,2], "host"], ["room.coat_rack", "Coat rack", 10, [1,1]]
+  ],
+  "wall": [
+    ["room.poster_space", "Space poster", 25, [1,1]], ["room.poster_cat", "Cat poster", 25, [1,1]], ["room.poster_motivate", "Motivational poster", 25, [1,1]],
+    ["room.tv_wall", "Wall TV", 100, [2,1], "anim"], ["room.dartboard", "Dartboard", 25, [1,1]], ["room.guitar_wall", "Wall guitar", 60, [1,1]],
+    ["room.map_world", "World map", 60, [2,1]], ["room.calendar", "Calendar", 10, [1,1]], ["room.kanban", "Kanban board", 60, [2,1]],
+    ["room.acoustic_panel", "Acoustic panel", 10, [1,1]], ["room.string_lights", "String lights", 25, [2,1], "anim"], ["room.clock_cuckoo", "Cuckoo clock", 60, [1,1], "anim"],
+    ["room.neon_claude", "Neon AI", 100, [2,1], "anim"], ["room.neon_bug", "Neon bug", 60, [1,1], "anim"], ["room.blueprint", "Blueprint", 25, [2,1]],
+    ["room.gold_record", "Gold record", 60, [1,1]], ["room.ivy", "Hanging ivy", 25, [1,1], "anim"], ["room.periodic_table", "Periodic table", 25, [2,1]]
+  ],
+  "surface": [
+    ["room.bonsai", "Bonsai", 25], ["room.headphones", "Headphones", 10], ["room.pizza_box", "Pizza box", 10], ["room.energy_drink", "Energy drink", 10],
+    ["room.snow_globe", "Snow globe", 25, "anim"], ["room.lava_lamp", "Lava lamp", 60, "anim"], ["room.rubik", "Rubik's cube", 10], ["room.speaker_small", "Smart speaker", 25, "anim"],
+    ["room.laptop", "Laptop", 25, "anim"], ["room.french_press", "French press", 25], ["room.fishbowl", "Fishbowl", 60, "anim"], ["room.hourglass", "Hourglass", 25, "anim"],
+    ["room.lego", "Brick model", 25], ["room.binoculars", "Binoculars", 10], ["room.compass", "Compass", 10], ["room.microscope", "Microscope", 60],
+    ["room.beaker", "Bubbling beaker", 25, "anim"], ["room.candle", "Candle", 10, "anim"], ["room.incense", "Incense", 10, "anim"], ["room.game_controller", "Game controller", 10],
+    ["room.succulent", "Succulent", 10], ["room.tea_set", "Tea set", 25], ["room.vinyl_stack", "Vinyl stack", 10], ["room.trophy_gold", "Gold trophy", 60]
+  ],
+  "officePresets": [
+    ["preset.cozy_study", "Cozy study", "bookshelf, armchair, round rug, floor lamp, fireplace, candle, tea set, wall shelf with books"],
+    ["preset.gamer_den", "Gamer den", "gaming desk, gaming chair, arcade + racing arcade, neon signs, wall TV, energy drinks, headphones, controller"],
+    ["preset.zen_garden", "Zen garden", "zen sand garden, koi pond, bonsai, bamboo-ish plants, incense, yoga mat, hanging ivy, acoustic panels"],
+    ["preset.startup_hq", "Startup HQ", "standing desk, kanban, standing whiteboard, beanbags, foosball, coffee machine, vending machine, motivational poster"],
+    ["preset.mad_lab", "Mad lab", "lab bench, bubbling beaker, microscope, periodic table, server rack, 3D printer, blueprint"],
+    ["preset.music_studio", "Music studio", "piano, drum kit, guitar on a stand, wall guitar, speaker tower, record player, gold record, acoustic panels, vinyl stack"],
+    ["preset.cafe_corner", "Café corner", "café tables and chairs, coffee machine, French press, string lights, chalkboard-ish poster, plants"],
+    ["preset.night_owl", "Night owl", "telescope, space poster, lava lamp, string lights, hammock, snow globe"],
+    ["preset.explorer_camp", "Explorer camp", "map table, floor globe, world map, telescope, compass, binoculars"]
+  ],
+  "agentTypeDefaults": {
+    "_note": "Free default cubicle look per subagent type (rendered only while the cubicle has no saved layout; the user's own decor always wins). Keys are lowercased agent types; unknown types fall back to 'default'.",
+    "explore": "scout desk: map table, globe, binoculars, compass, world map on the wall",
+    "general-purpose": "tidy office: desk, office chair, small plant, calendar, mug",
+    "plan": "war room: standing whiteboard, kanban on the wall, sticky notes, hourglass",
+    "code-reviewer": "inspector: magnifier-ish microscope, checklist poster, tea set",
+    "feature-dev:code-reviewer": "same as code-reviewer",
+    "feature-dev:code-architect": "architect: blueprint on the wall, brick model, drafting desk feel",
+    "feature-dev:code-explorer": "same as explore",
+    "claude-code-guide": "librarian: tall bookshelf, books, candle",
+    "statusline-setup": "tinkerer: laptop, headphones, rubik's cube",
+    "code-simplifier:code-simplifier": "minimalist: succulent, acoustic panel, nothing else",
+    "default": "plain desk with a plant"
+  }
+}

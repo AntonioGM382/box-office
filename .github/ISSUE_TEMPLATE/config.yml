@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security issue
+    url: https://github.com/AntonioGM382/box-office/security/advisories/new
+    about: Private vulnerability reporting. Please do not open a public issue.

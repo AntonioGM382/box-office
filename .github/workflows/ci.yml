@@ -1,0 +1,47 @@
+name: CI
+# Every push and pull request: one Linux job (cheap). The full matrix (Linux, Windows, macOS x Node 20, 22) runs on
+# demand ("Run workflow" in the Actions tab) and for release tags. macOS minutes count 10x and Windows 2x on private repos.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Run the full OS x Node matrix'
+        type: boolean
+        default: true
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quick:
+    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.full) && !startsWith(github.ref, 'refs/tags/') }}
+    name: Node 22 on ubuntu-latest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run check
+      - run: npm test
+  full:
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full) || startsWith(github.ref, 'refs/tags/') }}
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm run check
+      - run: npm test

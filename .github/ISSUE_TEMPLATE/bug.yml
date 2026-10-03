@@ -1,0 +1,61 @@
+name: Bug report
+description: Something does not work as described
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problem? Do not file it here. See SECURITY.md and use private vulnerability reporting.
+        Remove personal data (paths, project names, prompts, tokens) from logs and screenshots before pasting.
+  - type: input
+    id: version
+    attributes:
+      label: Box Office version
+      description: The version in package.json, or the commit hash if you run main.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 / macOS 14 / Ubuntu 24.04
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      description: Output of `node --version`.
+    validations:
+      required: true
+  - type: input
+    id: claude
+    attributes:
+      label: Claude Code version
+      description: Output of `claude --version`. Say so if you do not use the CLI (IDE extension, desktop app).
+  - type: dropdown
+    id: herdr
+    attributes:
+      label: Do you use herdr?
+      options: ["No", "Yes"]
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and what happened instead
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Terminal output of `node server.js` and the browser console, with personal data removed.
+      render: text
