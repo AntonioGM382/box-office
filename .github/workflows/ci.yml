@@ -1,6 +1,7 @@
 name: CI
 # Every push and pull request: one Linux job (cheap). The full matrix (Linux, Windows, macOS x Node 20, 22) runs on
-# demand ("Run workflow" in the Actions tab) and for release tags. macOS minutes count 10x and Windows 2x on private repos.
+# demand ("Run workflow" in the Actions tab) and for release tags. Jobs only run in the public repo (free Actions
+# minutes); in a private fork or mirror they are skipped instead of failing on a spent minutes budget.
 on:
   push:
     branches: [main]
@@ -17,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   quick:
-    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.full) && !startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ github.repository == 'AntonioGM382/box-office' && !(github.event_name == 'workflow_dispatch' && inputs.full) && !startsWith(github.ref, 'refs/tags/') }}
     name: Node 22 on ubuntu-latest
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -29,7 +30,7 @@ jobs:
       - run: npm run check
       - run: npm test
   full:
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.full) || startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ github.repository == 'AntonioGM382/box-office' && ((github.event_name == 'workflow_dispatch' && inputs.full) || startsWith(github.ref, 'refs/tags/')) }}
     name: Node ${{ matrix.node }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
